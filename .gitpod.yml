@@ -18,7 +18,7 @@ tasks:
   - name: Islandora remote worker
     before: | 
       cd ../islandora-remote &&
-      git checkout islandoraq
+      git checkout origin/islandoraq
     init: |
       gp sync-await cyber  #  wait for the above 'init' to finish
       make init
@@ -27,7 +27,7 @@ tasks:
   - name: Dspace remote worker
     before: | 
       cd ../dspace-remote &&
-      git checkout dspaceq
+      git checkout origin/dspaceq
     init: |
       gp sync-await cyber  #  wait for the above 'init' to finish
       make init
@@ -36,7 +36,7 @@ tasks:
   - name: OULib remote worker
     before: | 
       cd ../oulib-remote &&
-      git checkout oulibq
+      git checkout origin/oulibq
     init: |
       gp sync-await cyber  #  wait for the above 'init' to finish
       make init
