@@ -1,9 +1,9 @@
 additionalRepositories: 
-  - url: https://github.com/oulib-datacatalog/celery-remote-worker
+  - url: https://github.com/CapstoneGroup20/celery-remote-worker
     checkoutLocation: islandora-remote
-  - url: https://github.com/oulib-datacatalog/celery-remote-worker
+  - url: https://github.com/CapstoneGroup20/celery-remote-worker
     checkoutLocation: dspace-remote
-  - url: https://github.com/oulib-datacatalog/celery-remote-worker
+  - url: https://github.com/CapstoneGroup20/celery-remote-worker
     checkoutLocation: oulib-remote
 
 tasks:
