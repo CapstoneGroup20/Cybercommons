@@ -80,7 +80,10 @@ build:
 	@docker-compose --compatibility build
 
 coverage:
-	@docker-compose exec cybercom_api coverage run -Wa manage.py test
+	@docker-compose exec cybercom_api coverage run manage.py test
+
+coverage_report:
+	@docker-compose exec cybercom_api coverage report -m
 
 force_build:
 	@docker-compose --compatibility build --no-cache
