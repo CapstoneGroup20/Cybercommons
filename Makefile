@@ -79,6 +79,9 @@ dbshell:
 build:
 	@docker-compose --compatibility build
 
+coverage:
+	@docker-compose exec cybercom_api coverage run -Wa manage.py test
+
 force_build:
 	@docker-compose --compatibility build --no-cache
 

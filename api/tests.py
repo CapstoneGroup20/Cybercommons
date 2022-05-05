@@ -39,7 +39,7 @@ class CCAPITest(APITestCase):
         # Confirm the response matches the above api_sections
         self.assertEqual(response.data, api_sections)
 
-    def test_user_pofile_logged_in(self):
+    def test_user_profile_logged_in(self):
         request = self.factory.get('/user')
         force_authenticate(request, user=self.user)
         response = self.userprofile_view(request)
