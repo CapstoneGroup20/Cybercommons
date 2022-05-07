@@ -4,16 +4,22 @@ from rest_framework.test import APITestCase, force_authenticate, APIRequestFacto
 from rest_framework import status
 
 from api.views import APIRoot, UserProfile
-
+from rest_framework.test import APIClient
 
 class CCAPITest(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user(
+        
+        self.user = User.objects.create_superuser(
             username='testuser',
         )
+
+        self.user_not_super = User.objects.create_user(
+            username='testuser_not_super',
+        )
+         
         self.apiroot_view = APIRoot.as_view()
         self.userprofile_view = UserProfile.as_view()
-
+        
         self.factory = APIRequestFactory()
     
     def test_api_root(self):
@@ -53,3 +59,30 @@ class CCAPITest(APITestCase):
         response = self.userprofile_view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_add(self):
+        print("Testing add task")
+        task = '/queue/run/cybercomq.tasks.tasks.add/'
+        args = [2, 3]
+        result = 5
+        #test_task(self, task, args, result)
+        self.client.force_authenticate( user=self.user)
+        request = self.client.post( task, 
+            {'args': args}, format = "json")
+        url = str(request.data.get('result_url')[21:])
+        response = self.client.get(url)
+        print("Result is ", response.data['result']['result'])
+        self.assertEqual(response.data['result']['result'], result)
+
+#Generic testing functions
+def test_reachable_page(self, page):
+    request = self.client.get(page)
+    self.assertEqual(request.status_code, 401)
+
+def test_task(self, task, args, result):
+    self.client.force_authenticate( user=self.user)
+    request = self.client.post( task, 
+            {'args': args}, format = "json")
+    url = str(request.data.get('result_url')[21:])
+    response = self.client.get(url)
+    print("Result is ", response.data['result']['result'])
+    self.assertEqual(response.data['result']['result'], result)
