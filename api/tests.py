@@ -8,13 +8,11 @@ from rest_framework.test import APIClient
 
 class CCAPITest(APITestCase):
     def setUp(self):
-        
         self.user = User.objects.create_superuser(
-            username='testuser',
+            username = 'super',
         )
-
         self.user_not_super = User.objects.create_user(
-            username='testuser_not_super',
+            username = 'not_super',
         )
          
         self.apiroot_view = APIRoot.as_view()
@@ -59,43 +57,63 @@ class CCAPITest(APITestCase):
         response = self.userprofile_view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    '''
-    def test_add_dspace(self):
+    # Cybercommons test
+    def test_cybercom_add(self):
+        task = '/queue/run/cybercomq.tasks.tasks.add/'
+        queue = 'celery'
         args = [2, 3]
         result = 5
-        #test_task(self, task, args, result)
-        self.client.force_authenticate( user=self.user)
-        request = self.client.post( '/queue/run/cybercomq.tasks.tasks.add/', 
-            {'queue': 'celery', 'args': [2,3], 'kwargs': {}, 'tags': []}, format = "json")
-        url = str(request.data.get('result_url')[21:])
-        response = self.client.get(url)
-        time.sleep(60)
-        self.assertEqual(response.data['result']['status'], 'SUCCESS')
-        self.assertEqual(response.data['result']['result'], result)'''
+        test_task(self, task, queue, args, result)
 
+    # ====== Dspace tests ====== #
     def test_dspace_add(self):
         task = '/queue/run/dspaceq.tasks.tasks.add/'
         queue = 'dev_dspace'
         args = [2, 3]
         result = 5
-        #test_task(self, task, args, result)
-        self.client.force_authenticate( user=self.user)
-        request = self.client.post(task, 
-            {'queue': queue, 'args': args}, format = "json")
-        url = str(request.data.get('result_url')[21:])
-        response = self.client.get(url)
-        self.assertEqual(response.data['result']['result'], result)
-'''
+        test_task(self, task, queue, args, result)
+    
+    def test_dspace_ingest_thesis(self):
+        task = '/queue/run/dspaceq.tasks.tasks.ingest_thesis_dissertation/'
+        queue = 'dev_dspace'
+        args = []
+        test_task(self, task, queue, args, result=None)
+
+    # ====== Islandora tests ====== #
+    def test_islandora_add(self):
+        task = '/queue/run/islandoraq.tasks.tasks.add/'
+        queue = 'dev_islandora'
+        args = [2, 3]
+        result = 5
+        test_task(self, task, queue, args, result)
+
+    # ====== Oulib tests ====== #
+    def test_oulib_clean_nas(self):
+        task = '/queue/run/oulibq.tasks.tasks.clean_nas_files/'
+        queue = 'dev_oulibq'
+        args = []
+        test_task(self, task, queue, args, result=None)
+
+
+    def get_tasks(self):
+        print("=======================\nTASKS\n")
+        response = self.client.get("/queue/")
+        print(response.data)
+
+    
 #Generic testing functions
 def test_reachable_page(self, page):
     request = self.client.get(page)
     self.assertEqual(request.status_code, 401)
 
-def test_task(self, task, args, result):
+def test_task(self, task, queue, args, result):
     self.client.force_authenticate( user=self.user)
     request = self.client.post( task, 
-            {'args': args}, format = "json")
+            {'queue': queue, 'args': args}, format = "json")
+    time.sleep(2)
     url = str(request.data.get('result_url')[21:])
     response = self.client.get(url)
-    print("Result is ", response.data['result']['result'])
-    self.assertEqual(response.data['result']['result'], result)'''
+    #print("Result is ", response.data['result']['result'])
+    self.assertEqual(response.data['result']['status'], 'SUCCESS')
+    if(result != None):
+        self.assertEqual(response.data['result']['result'], result)
