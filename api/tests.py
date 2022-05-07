@@ -56,7 +56,7 @@ class CCAPITest(APITestCase):
         request = self.factory.get('/user')
         response = self.userprofile_view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
+    
     # Cybercommons test
     def test_cybercom_add(self):
         task = '/queue/run/cybercomq.tasks.tasks.add/'
@@ -93,13 +93,6 @@ class CCAPITest(APITestCase):
         queue = 'dev_oulibq'
         args = []
         test_task(self, task, queue, args, result=None)
-
-
-    def get_tasks(self):
-        print("=======================\nTASKS\n")
-        response = self.client.get("/queue/")
-        print(response.data)
-
     
 #Generic testing functions
 def test_reachable_page(self, page):
